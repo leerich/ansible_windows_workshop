@@ -47,7 +47,7 @@ In the main window, click 'Clone git repository'
 TODO - Create a 1.1-vscode-gitclone.png!!! Missed this one!
 image::.png[title="Git Clone",width=1000]
 
-At the top, enter https://gitlab.ansibleworkshop.com/student#/student#-playbooks, where # is your student number.
+At the top, enter https://gitlab.ansibleworkshop.com/student#/student#-playbooks.git, where # is your student number.
 When it prompts you for directory, leave the default (C:\Users\Administrator)
 
 You will see the progress spin in the bottom left bar.  Eventually you will be prompted for your gitlab user/password.  (Watch your menu bar for this to pop up)  Use your AD credentials (student#/...)
@@ -61,7 +61,7 @@ At this point in the Explorer accordion you should have a 'student#-playbooks' s
 
 image::1-1-vscode-studentplaybooks.png[title="Student Playbooks Repo",width=1000]
 
-*Step 2:* Create a directory and called *iis_basic* and a file called `install_iis.yml`
+*Step 2:* Create a directory called *iis_basic* and a file called `install_iis.yml`
 
 Hover over the 'student#-playbooks' section and click on the 'New Folder' button
 
