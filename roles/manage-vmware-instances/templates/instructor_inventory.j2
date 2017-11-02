@@ -33,9 +33,9 @@ ansible_ssh_user={{ root_user }}
 [instructor]
 {% for host in hostvars %}
 {%   if "windc" in host %}
-{{ host|replace(ec2_name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_host, "") }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password={{ hostvars[host].ansible_password }}
+{{ host }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password={{ hostvars[host].ansible_password }}
 {%   elif "gitlab" in host %}
-{{ host|replace(ec2_name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_ssh_host }}
+{{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }}
 {%   endif %}
 {% endfor %}
 
@@ -45,9 +45,9 @@ ansible_ssh_user={{ root_user }}
 {%     if "windc" in host -%}
 {%     elif "gitlab" in host -%}
 {%     elif "tower" in host %}
-{{ host|replace(ec2_name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_ssh_host }} 
+{{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }} 
 {%     else %}
-{{ host|replace(ec2_name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password={{ hostvars[host].ansible_password }}
+{{ host }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password={{ hostvars[host].ansible_password }}
 {%     endif %}
 {%   endfor %}
 {% endfor %}
@@ -57,7 +57,7 @@ ansible_ssh_user={{ root_user }}
 {%   for entry in groups[group] %}
 {%     for host in hostvars %}
 {%       if entry == host %}
-{{ host|replace(ec2_name_prefix + "-", "") }} 
+{{ host }} 
 {%       endif %}
 {%     endfor %}
 {%   endfor %}

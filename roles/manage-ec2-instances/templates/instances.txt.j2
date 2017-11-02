@@ -18,7 +18,7 @@ ansible_port=5986
 
 [tower:vars]
 ansible_port=22
-ansible_ssh_user=ec2-user
+ansible_ssh_user={{ root_user }}
 
 [{{ user_prefix }}{{ item }}]
 {% for host in hostvars %}

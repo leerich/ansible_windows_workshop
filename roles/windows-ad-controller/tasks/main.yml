@@ -1,6 +1,5 @@
 ---
-# tasks file for windows-ad-controller---
-- name: Install AD 
+- name: Install AD-Domain-Services
   win_feature:
     name: AD-Domain-Services
     state: present
@@ -19,19 +18,19 @@
 #    minutes: 3
 #  when: winfeature.changed
 
-- name: Install AD
-  win_feature:
-    name: AD-Certificate
-    state: present
-    include_management_tools: True
-    include_sub_features: True
-  register: wincertfeature
+#- name: Install AD-Certificate
+#  win_feature:
+#    name: AD-Certificate
+#    state: absent
+#    include_management_tools: True
+#    include_sub_features: True
+#  register: wincertfeature
 
-- debug: var=wincertfeature
+#- debug: var=wincertfeature
 
-- name: Reboot if needed
-  win_reboot:
-  when: wincertfeature.reboot_required
+#- name: Reboot if needed
+#  win_reboot:
+#  when: wincertfeature.reboot_required
 
 - name: Install DNS
   win_feature: 
@@ -143,6 +142,7 @@
 - name: Sleep 60 seconds before adding windows group... sigh...
   pause:
     minutes: 1
+  when: windc.changed
 
 - name: Ensure AD services are started - will fail if install not complete
   win_service:
@@ -175,6 +175,11 @@
 - name: Set Reverse Lookup Zone - 2nd run
   win_shell: Add-DnsServerPrimaryZone -NetworkId "{{ ptr_zone_cidr }}" -DynamicUpdate Secure -ReplicationScope Domain
   when: "ptr_zone_name not in dnsserverzone.stdout"
+  register: revsersedns2
+  failed_when: revsersedns2.rc > 1
+
+  ignore_errors: true
+
 
 - name: Get A records for zone 
   win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
@@ -184,7 +189,7 @@
 - debug: var=arecords
 
 - name: Create A record for gitlab
-  win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['private_ip'] }}" -TimeToLive 01:00:00 -AgeRecord
+  win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'gitlab' not in arecords.stdout"
 
 - name: Get PTR Records for zone 
@@ -198,7 +203,7 @@
 
 # Add-DnsServerResourceRecordPtr -Name "17" -ZoneName "1.168.192.in-addr.arpa" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "hostname.example.com"
 - name: Set PTR Record for each host 
-  win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['private_ip'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
+  win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
   when: "item not in ptr_records.stdout"
   with_items: "{{groups.all}}"
 
@@ -231,8 +236,6 @@
   win_domain_user:
     name: "{{ user_prefix }}{{ item }}" 
     upn: "{{ user_prefix}}{{ item }}@{{ dns_domain_name }}"
-    #name: "{{ item }}" 
-    #upn: "{{ item }}@{{ dns_domain_name }}"
     state: present
     enabled: yes
     account_locked: no 
@@ -245,8 +248,6 @@
     surname: user
     company: AnsibleByRedHat
     email: "{{user_prefix}}{{ item }}@{{ dns_domain_name }}"
-    #email: "{{ item }}@{{ dns_domain_name }}"
-  #with_items: "{{ users }}"
   with_sequence: count="{{ user_count }}"
 
 - name: Get current DNS search string

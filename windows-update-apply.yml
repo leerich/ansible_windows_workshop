@@ -1,7 +1,6 @@
 # windows-updates.yml
 
-- hosts: windows
-  serial: 1
+- hosts: windows_workstations,windows
 
   tasks:
     - name: Check for missing updates.

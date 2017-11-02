@@ -1,10 +1,8 @@
 ---
-# tasks file for windows-common
 - name: Add domain controller private IP as DNS server
   win_dns_client:
     adapter_names: "*"
     ipv4_addresses: "{{ dns_servers }}"
-    #log_path: c:\dns_log.txt
 
 - name: Join Domain
   win_domain_membership:

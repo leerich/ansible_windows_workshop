@@ -1,0 +1,32 @@
+- name: Destroy lab instances
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: get ec2 instance information
+      ec2_instance_facts:
+        region: "{{ region }}"
+        filters:
+          vpc-id: "{{ vpc_id }}"
+          "tag:Name": "{{ ec2_name_prefix }}*"
+      register: ec2_instances
+
+    - debug:
+        var: ec2_instances
+
+    - name: terminate instances
+      ec2:
+        region: "{{ region }}"
+        state: "absent"
+        instance_ids: "{{ ec2_instances.instances | map(attribute='instance_id') | list }}"
+
+  post_tasks:
+    - name: Remove inventory files
+      file: path="{{ item }}" state=absent
+      with_fileglob: "{{ playbook_dir }}/*.txt"
+      register: removal
+      changed_when: removal|success

@@ -11,7 +11,7 @@
   
 - name: Create Ansible Control Node security group   
   ec2_group:  
-    name: "towersg"  
+    name: "{{ ec2_name_prefix }}-towersg"  
     description: "Ansible Tower SG"  
     vpc_id: "{{ vpc_id }}"  
     region: "{{ region }}"  
@@ -32,14 +32,14 @@
 - name: Launch Tower Instance  
   ec2:  
     key_name: "{{ keypair }}"  
-    group: "towersg"  
+    group: "{{ ec2_name_prefix }}-towersg"  
     instance_type: "{{ tower_instance_type }}"  
     exact_count: 1
     count_tag: 
-      Name: "{{'s' + item + 'tower'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
     instance_tags:  
-      Name: "{{'s' + item + 'tower'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ rhel_ami }}"  
@@ -89,7 +89,7 @@
 #### Deploy GitLab Server
 - name: GitLab | Create Gitlab Node security group
   ec2_group:
-    name: "gitlabsg"
+    name: "{{ ec2_name_prefix }}-gitlabsg"
     description: "Gitlab SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -114,14 +114,14 @@
 - name: GitLab | Launch Instance
   ec2:
     key_name: "{{ keypair }}"
-    group: "gitlabsg"
+    group: "{{ ec2_name_prefix }}-gitlabsg"
     instance_type: "{{ gitlab_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: gitlab
+      Name: "{{ ec2_name_prefix }}-gitlab"
       App: AnsibleWorkshop
     instance_tags:
-      Name: gitlab
+      Name: "{{ ec2_name_prefix }}-gitlab"
       App: AnsibleWorkshop
     image: "{{ rhel_ami }}"
     wait: true
@@ -167,7 +167,7 @@
 # VPC cidr used to restrict AD access to others in your subnet
 - name: DomainController | Create MS AD Domain Controller security group
   ec2_group:
-    name: "windcsg"
+    name: "{{ ec2_name_prefix }}-windcsg"
     description: "Microsoft AD Domain Controller SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -282,14 +282,14 @@
 - name: DomainController | Launch instance
   ec2:
     key_name: "{{ keypair }}"
-    group: "windcsg"
+    group: "{{ ec2_name_prefix }}-windcsg"
     instance_type: "{{ windc_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: windc
+      Name: "{{ ec2_name_prefix }}-windc"
       App: AnsibleWorkshop
     instance_tags:
-      Name: windc
+      Name: "{{ ec2_name_prefix }}-windc"
       App: AnsibleWorkshop
     image: "{{ windows_ami }}"
     wait: true
@@ -343,7 +343,7 @@
 
 - name: Windows | Create MS Windows security group
   ec2_group:
-    name: "windowssg"
+    name: "{{ ec2_name_prefix }}-windowssg"
     description: "Microsoft Windows SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -360,7 +360,7 @@
 
 - name: Windows | Create HTTP security group
   ec2_group:
-    name: "websg"
+    name: "{{ ec2_name_prefix }}-websg"
     description: "Web Server SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -394,15 +394,15 @@
   ec2:
     key_name: "{{ keypair }}"
     group: 
-      - windowssg
-      - websg
+      - "{{ ec2_name_prefix }}-windowssg"
+      - "{{ ec2_name_prefix }}-websg"
     instance_type: "{{ windows_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{'s' + item + 'win1'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{'s' + item + 'win1'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ windows_ami }}"
@@ -416,31 +416,31 @@
   async: 7200
   poll: 0
 
-- name: Windows | Launch instance 2
-  ec2:
-    key_name: "{{ keypair }}"
-    group:
-      - windowssg
-      - websg
-    instance_type: "{{ windows_instance_type }}"
-    exact_count: 1
-    count_tag:
-      Name: "{{'s' + item + 'win2'}}"
-      App: AnsibleWorkshop
-    instance_tags:
-      Name: "{{'s' + item + 'win2'}}"
-      App: AnsibleWorkshop
-      User: "{{ user_prefix + item }}"
-    image: "{{ windows_ami }}"
-    wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ vpc_subnet_id }}"
-    user_data: "{{ lookup('template', 'win2_ec2_user_data.j2') }}"
-    assign_public_ip: yes
-  with_sequence: count={{user_count}}
-  register: windows2_jobs
-  async: 7200
-  poll: 0
+#- name: Windows | Launch instance 2
+#  ec2:
+#    key_name: "{{ keypair }}"
+#    group:
+#      - "{{ ec2_name_prefix }}-windowssg"
+#      - "{{ ec2_name_prefix }}-websg"
+#    instance_type: "{{ windows_instance_type }}"
+#    exact_count: 1
+#    count_tag:
+#      Name: "{{ ec2_name_prefix + '-s' + item + 'win2'}}"
+#      App: AnsibleWorkshop
+#    instance_tags:
+#      Name: "{{ ec2_name_prefix + '-s' + item + 'win2'}}"
+#      App: AnsibleWorkshop
+#      User: "{{ user_prefix + item }}"
+#    image: "{{ windows_ami }}"
+#    wait: true
+#    region: "{{ region }}"
+#    vpc_subnet_id: "{{ vpc_subnet_id }}"
+#    user_data: "{{ lookup('template', 'win2_ec2_user_data.j2') }}"
+#    assign_public_ip: yes
+#  with_sequence: count={{user_count}}
+#  register: windows2_jobs
+#  async: 7200
+#  poll: 0
 
 - name: Wait for windows instance creation to complete
   async_status: jid="{{ item.ansible_job_id }}"
@@ -449,7 +449,7 @@
   retries: 300
   with_items: 
     - "{{ windows1_jobs.results }}"
-    - "{{ windows2_jobs.results }}"
+#    - "{{ windows2_jobs.results }}"
 
 #- debug: msg="{{ item }}"
 #  with_items:  "{{ windows_instances.results | map(attribute='tagged_instances') | list | list}}"
@@ -502,14 +502,14 @@
   ec2:
     key_name: "{{ keypair }}"
     group:
-      - windowssg
+      - "{{ ec2_name_prefix }}-windowssg"
     instance_type: "{{ windows_workstation_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{'s' + item + 'workstation'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{'s' + item + 'workstation'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ windows_ami }}"

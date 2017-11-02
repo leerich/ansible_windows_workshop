@@ -1,5 +1,4 @@
 ---
-# tasks file for ansible-tower
 - name: Enable extras repos
   shell: yum-config-manager --enable rhui-REGION-rhel-server-extras
 
@@ -21,21 +20,11 @@
     - sshpass
     - ansible
     - bind-utils
-
-- name: Check for pip
-  stat:
-    path: /usr/bin/pip
-  register: pip
-
-- name: Install pip
-  shell: easy_install pip
-  #when: ansible_devel
-  #when: ansible_devel and pip.stat.exists is not defined ## This doesn't work
+    - python-pip
 
 - name: Install devel branch
   pip:
     name: git+https://github.com/ansible/ansible.git@devel#egg=ansible
-  #shell: pip install git+https://github.com/ansible/ansible.git@devel
   when: ansible_devel
 
 - name: Create /etc/ansible directory
@@ -76,7 +65,7 @@
 # Set DNS name via network manager
 - name: set DNS resolution in ifcfg file 
   blockinfile:
-    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+    dest: /etc/sysconfig/network-scripts/ifcfg-ens192
     block: |
       DNS1={{ dns_server }}
       DNS2=8.8.8.8
