@@ -1,0 +1,59 @@
+---
+
+# ----------------------- Destroy Tower Instances -----------------------
+- name: Destory Tower Instances
+  vsphere_guest:
+    vcenter_hostname: "{{ vCenterServer }}"
+    username: "{{ vCenterUsername }}"
+    password: "{{ vCenterPassword }}"
+    guest: "{{ ec2_name_prefix }}-s{{ item }}-tower"
+    validate_certs: false
+    state: absent
+    force: yes
+  with_sequence: count={{ user_count }}
+
+# ----------------------- Destroy Gitlab Instances -----------------------
+- name: Destory Gitlab Instances
+  vsphere_guest:
+    vcenter_hostname: "{{ vCenterServer }}"
+    username: "{{ vCenterUsername }}"
+    password: "{{ vCenterPassword }}"
+    guest: "{{ ec2_name_prefix }}-gitlab"
+    validate_certs: false
+    state: absent
+    force: yes
+
+# ----------------------- Destroy DC Instances -----------------------
+- name: Destory DC Instances
+  vsphere_guest:
+    vcenter_hostname: "{{ vCenterServer }}"
+    username: "{{ vCenterUsername }}"
+    password: "{{ vCenterPassword }}"
+    guest: "{{ ec2_name_prefix }}-dc"
+    validate_certs: false
+    state: absent
+    force: yes
+
+# ----------------------- Destroy Windows Instances -----------------------
+- name: Destory Windows Instances
+  vsphere_guest:
+    vcenter_hostname: "{{ vCenterServer }}"
+    username: "{{ vCenterUsername }}"
+    password: "{{ vCenterPassword }}"
+    guest: "{{ ec2_name_prefix }}-s{{ item }}-win1"
+    validate_certs: false
+    state: absent
+    force: yes
+  with_sequence: count={{ user_count }}
+
+# ----------------------- Destroy Workstation Instances -----------------------
+- name: Destory Workstation Instances
+  vsphere_guest:
+    vcenter_hostname: "{{ vCenterServer }}"
+    username: "{{ vCenterUsername }}"
+    password: "{{ vCenterPassword }}"
+    guest: "{{ ec2_name_prefix }}-s{{ item }}-work"
+    validate_certs: false
+    state: absent
+    force: yes
+  with_sequence: count={{ user_count }}
