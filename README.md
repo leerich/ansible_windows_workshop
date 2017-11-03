@@ -8,7 +8,7 @@ These ansible playbooks provision a lab on AWS for use in delivering a workshop 
 * Per-Student Infrastructure
   * An Ansible/Tower control node
   * A Windows Workstation for interacting with the environment
-  * 2 Windows Hosts for running playbooks against
+  * A Windows Hosts for running playbooks against
 
 These expect an existing VPC.  In addition, there is no tear-down playbook.  However, just terminating the EC2 instances clears the environment.  
 
