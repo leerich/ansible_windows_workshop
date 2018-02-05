@@ -28,7 +28,11 @@ options:
   key_file:
     description:
       - Path to the file containing the key pair used on the instance.
-    required: true
+    required: false
+  key_file_data:
+    description:
+      - String containing the key pair used on the instance.
+    required: false
   key_passphrase:
     version_added: "2.0"
     description:
@@ -120,19 +124,26 @@ def main():
     argument_spec = ec2_argument_spec()
     argument_spec.update(dict(
         instance_id = dict(required=True),
-        key_file = dict(required=True, type='path'),
+        key_file = dict(required=False, type='path'),
+        key_file_data = dict(required=False, type='str', no_log=True),
         key_passphrase = dict(no_log=True, default=None, required=False),
         wait = dict(type='bool', default=False, required=False),
         wait_timeout = dict(default=120, required=False),
     )
     )
-    module = AnsibleModule(argument_spec=argument_spec)
+    module = AnsibleModule(argument_spec=argument_spec,
+                           mutually_exclusive=[
+                             ['key_file', 'key_file_data'],
+                           ],
+                           required_one_of=[['key_file', 'key_file_data']]
+                           )
 
     if not HAS_BOTO:
         module.fail_json(msg='Boto required for this module.')
 
     instance_id = module.params.get('instance_id')
     key_file = module.params.get('key_file')
+    key_file_data = module.params.get('key_file_data')
     if module.params.get('key_passphrase') is None:
         b_key_passphrase = None
     else:
@@ -160,16 +171,19 @@ def main():
     if wait and datetime.datetime.now() >= end:
         module.fail_json(msg = "wait for password timeout after %d seconds" % wait_timeout)
 
-    try:
-        f = open(key_file, 'rb')
-    except IOError as e:
-        module.fail_json(msg = "I/O error (%d) opening key file: %s" % (e.errno, e.strerror))
+    if key_file_data is None:
+      try:
+          f = open(key_file, 'rb')
+      except IOError as e:
+          module.fail_json(msg = "I/O error (%d) opening key file: %s" % (e.errno, e.strerror))
+      else:
+          try:
+              with f:
+                  key = load_pem_private_key(f.read(), b_key_passphrase, BACKEND)
+          except (ValueError, TypeError) as e:
+              module.fail_json(msg = "unable to parse key file")
     else:
-        try:
-            with f:
-                key = load_pem_private_key(f.read(), b_key_passphrase, BACKEND)
-        except (ValueError, TypeError) as e:
-            module.fail_json(msg = "unable to parse key file")
+       key = load_pem_private_key(key_file_data, b_key_passphrase, BACKEND)
 
     try:
         decrypted = key.decrypt(decoded, PKCS1v15())

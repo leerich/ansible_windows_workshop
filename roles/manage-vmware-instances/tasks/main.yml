@@ -90,7 +90,10 @@
   add_host:  
     hostname: "gitlab"  
     ansible_ssh_host: "{{ ec2gitlab.instance.ipv4 }}"  
+    ansible_host: "{{ ec2gitlab.instance.ipv4 }}"  
     private_ip: "{{ ec2gitlab.instance.ipv4 }}"
+    ansible_user: "{{ root_user }}"
+    ansible_password: "{{ root_password }}"
     groups: gitlab
 
 
@@ -131,8 +134,11 @@
 - name: Tower | Add new instance to host group  
   add_host:  
     hostname: "{{ item.hw_name }}"  
-    ansible_ssh_host: "{{ item.ipv4 }}"  
+    ansible_ssh_host: "{{ item.ipv4 }}"
+    ansible_host: "{{ item.ipv4 }}"
     private_ip: "{{ item.ipv4 }}"
+    ansible_user: "{{ root_user }}"
+    ansible_password: "{{ root_password }}"
     groups: tower
   with_items: "{{ tower_instances.results | map(attribute='instance') | list }}"  
 

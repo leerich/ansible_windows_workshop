@@ -33,9 +33,9 @@ ansible_ssh_user={{ root_user }}
 [instructor]
 {% for host in hostvars %}
 {%   if "windc" in host %}
-{{ host }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password={{ hostvars[host].ansible_password }}
+{{ host }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }} ansible_password={{ hostvars[host].ansible_password }}
 {%   elif "gitlab" in host %}
-{{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }}
+{{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }} ansible_user={{ hostvars[host].ansible_user }} ansible_password={{ hostvars[host].ansible_password }}
 {%   endif %}
 {% endfor %}
 
@@ -45,9 +45,9 @@ ansible_ssh_user={{ root_user }}
 {%     if "windc" in host -%}
 {%     elif "gitlab" in host -%}
 {%     elif "tower" in host %}
-{{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }} 
+{{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }} ansible_user={{ hostvars[host].ansible_user }} ansible_password={{ hostvars[host].ansible_password }}
 {%     else %}
-{{ host }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password={{ hostvars[host].ansible_password }}
+{{ host }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }} ansible_password={{ hostvars[host].ansible_password }}
 {%     endif %}
 {%   endfor %}
 {% endfor %}

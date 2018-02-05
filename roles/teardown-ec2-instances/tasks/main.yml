@@ -17,7 +17,7 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_tower_instances.instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_tower_instances.results[0].instances | map(attribute='instance_id') | list }}"
 
 - name: Remove Tower security group   
   ec2_group:  
@@ -40,7 +40,7 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_gitlab_instances.instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_gitlab_instances.results[0].instances | map(attribute='instance_id') | list }}"
 
 - name: Remove Gitlab security group   
   ec2_group:  
@@ -64,7 +64,7 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_dc_instances.instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_dc_instances.results[0].instances | map(attribute='instance_id') | list }}"
 
 - name: Remove DC security group   
   ec2_group:  
@@ -89,7 +89,7 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_windows_instances.instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_windows_instances.results[0].instances | map(attribute='instance_id') | list }}"
 
 - name: Remove Web security group   
   ec2_group:  
@@ -119,7 +119,7 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_workstation_instances.instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_workstation_instances.results[0].instances | map(attribute='instance_id') | list }}"
 
 
 

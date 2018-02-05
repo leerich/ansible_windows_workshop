@@ -169,16 +169,18 @@
 
 - name: Sleep 60 seconds before adding reverse zone lookup. sigh...
   pause:
-    minutes: 1
+    minutes: 2
   when: "ptr_zone_name not in dnsserverzone.stdout"
 
 - name: Set Reverse Lookup Zone - 2nd run
   win_shell: Add-DnsServerPrimaryZone -NetworkId "{{ ptr_zone_cidr }}" -DynamicUpdate Secure -ReplicationScope Domain
   when: "ptr_zone_name not in dnsserverzone.stdout"
   register: revsersedns2
-  failed_when: revsersedns2.rc > 1
-
+#  failed_when: revsersedns2.rc > 1
   ignore_errors: true
+
+- debug: var=revsersedns2
+
 
 
 - name: Get A records for zone 
@@ -187,6 +189,8 @@
   register: arecords
 
 - debug: var=arecords
+
+- debug: var=hostvars['gitlab']
 
 - name: Create A record for gitlab
   win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord

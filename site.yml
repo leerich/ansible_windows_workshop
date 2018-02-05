@@ -45,6 +45,7 @@
   tags:
     - ansible-tower
   roles: 
+    - linux-common
     - ansible-tower
 
 # Configure Windows Hosts

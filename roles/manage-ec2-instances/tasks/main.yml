@@ -48,6 +48,7 @@
     vpc_subnet_id: "{{ vpc_subnet_id }}"  
     user_data: "{{ lookup('template', 'linux_ec2_user_data.j2') }}"
     assign_public_ip: yes  
+  with_sequence: count={{user_count}}
   register: tower_jobs
   async: 7200
   poll: 0
