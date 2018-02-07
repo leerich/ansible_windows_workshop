@@ -7,7 +7,7 @@
     filters:
       vpc-id: "{{ vpc_id }}"
       "tag:Name": "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
-  with_sequence: count={{user_count}}
+  with_sequence: count={{ user_count }}
   register: ec2_tower_instances
 
 - debug:
@@ -17,7 +17,8 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_tower_instances.results[0].instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_tower_instances.results | map(attribute='instance_id') | list }}"
+  when: item is defined
 
 - name: Remove Tower security group   
   ec2_group:  
@@ -40,7 +41,8 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_gitlab_instances.results[0].instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_gitlab_instances.results | map(attribute='instance_id') | list }}"
+  when: item is defined
 
 - name: Remove Gitlab security group   
   ec2_group:  
@@ -64,7 +66,8 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_dc_instances.results[0].instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_dc_instances.results | map(attribute='instance_id') | list }}"
+  when: item is defined
 
 - name: Remove DC security group   
   ec2_group:  
@@ -89,7 +92,8 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_windows_instances.results[0].instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_windows_instances.results | map(attribute='instance_id') | list }}"
+  when: item is defined
 
 - name: Remove Web security group   
   ec2_group:  
@@ -119,7 +123,9 @@
   ec2:
     region: "{{ region }}"
     state: "absent"
-    instance_ids: "{{ ec2_workstation_instances.results[0].instances | map(attribute='instance_id') | list }}"
+    instance_ids: "{{ ec2_workstation_instances.results | map(attribute='instance_id') | list }}"
+  when: item is defined
+
 
 
 
