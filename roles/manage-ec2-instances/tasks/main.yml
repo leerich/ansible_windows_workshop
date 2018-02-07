@@ -306,7 +306,7 @@
     host: "{{ item.public_ip }}"
     port: 5986
     delay: 1
-    timeout: 600
+    timeout: 1800
     state: started
   with_items: "{{ ec2dc.tagged_instances }}"
 
@@ -462,7 +462,7 @@
     host: "{{ item.public_ip }}"
     port: 5986
     delay: 1
-    timeout: 600
+    timeout: 1800
     state: started
   with_items: "{{ windows_instances.results | map(attribute='tagged_instances') | list }}"
 
@@ -535,7 +535,7 @@
     host: "{{ item.public_ip }}"
     port: 5986
     delay: 1
-    timeout: 600
+    timeout: 1800
     state: started
   with_items: "{{ workstation_instances.results | map(attribute='tagged_instances') | list }}"
 
