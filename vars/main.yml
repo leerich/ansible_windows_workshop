@@ -92,7 +92,7 @@ windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
 
 # Ideally update to auto-pull the latest
 rhel_ami: ami-c998b6b2              # Rhel 7.4
-windows_ami: ami-0a792a70           # Windows 2016 Base
-
+#windows_ami: ami-0a792a70           # Windows 2016 Base
+windows_ami: ami-603b1c1a
 
 
