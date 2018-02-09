@@ -3,6 +3,7 @@
 - name: Provision Instances
   hosts: localhost
   connection: local
+  become: no
   gather_facts: no
   vars_files:
     - vars/main.yml
