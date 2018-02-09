@@ -1,7 +1,7 @@
 ---
 # tasks file for manage-ec2-instances
 - name: Get Key Pairs
-  command: aws ec2 describe-key-pairs
+  command: 'aws ec2 describe-key-pairs'
   register: ec2_keypairs
 
 - name: Fail if keypair doesn't exist
