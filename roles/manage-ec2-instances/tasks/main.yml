@@ -1,13 +1,13 @@
 ---
 # tasks file for manage-ec2-instances
-- name: Get Key Pairs
-  command: 'aws ec2 describe-key-pairs'
-  register: ec2_keypairs
+#- name: Get Key Pairs
+#  command: 'aws ec2 describe-key-pairs'
+#  register: ec2_keypairs
 
-- name: Fail if keypair doesn't exist
-  fail:
-    msg: "Keypair <{{ keypair }}> does not exist"
-  when: "keypair not in ec2_keypairs.stdout"
+#- name: Fail if keypair doesn't exist
+#  fail:
+#    msg: "Keypair <{{ keypair }}> does not exist"
+#  when: "keypair not in ec2_keypairs.stdout"
   
 - name: Create Ansible Control Node security group   
   ec2_group:  
