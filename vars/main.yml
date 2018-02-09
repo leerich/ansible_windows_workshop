@@ -88,7 +88,7 @@ tower_instance_type: "t2.medium"    # Medium = 2 vCPU / 4GB
 gitlab_instance_type: "t2.medium"   # Might be able to use small...
 windc_instance_type: "t2.medium"    # t2.micro fails
 windows_workstation_instance_type: "t2.medium"   # t2.small was slowwwwww...
-windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
+windows_instance_type: "t2.medium"   # Small = 1 vCPU / 2GB
 
 # Ideally update to auto-pull the latest
 rhel_ami: ami-c998b6b2              # Rhel 7.4
