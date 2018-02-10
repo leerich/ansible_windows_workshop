@@ -6,7 +6,7 @@
     include_management_tools: True
     include_sub_features: True
   register: winfeature
-   
+
 - debug: var=winfeature
 
 - name: Reboot if needed
@@ -33,7 +33,7 @@
 #  when: wincertfeature.reboot_required
 
 - name: Install DNS
-  win_feature: 
+  win_feature:
     name: DNS
     state: present
     include_management_tools: True
@@ -49,7 +49,7 @@
   pause:
     minutes: 3
   when: windnsfeature.changed
- 
+
 - name: Ensure AD services are started - will fail if install not complete
   win_service:
     name: "{{ item }}"
@@ -65,9 +65,9 @@
     - lanmanworkstation
     - kdc
     - netlogon
- 
-# Validate? 
-# DCDIAG 
+
+# Validate?
+# DCDIAG
 # Get-Service adws,kdc,netlogon,dns     # Services are running?
 # Get-smbshare          # sysvol & netlogin shares
 # get-eventlog "Directory Service" | select entrytype, source, eventid, message
@@ -75,7 +75,7 @@
 # get-eventlog "Active Directory Web Services" | select entrytype, source, eventid, message
 
 - name: Create DNS Domain
-  win_domain: 
+  win_domain:
     dns_domain_name: "{{ dns_domain_name }}"
     safe_mode_password: "{{ domain_admin_password }}"
   register: windomain
@@ -86,8 +86,8 @@
   win_reboot:
   when: windomain.reboot_required
 
-# For some reason on a run after reboot I'm getting an error sometimes 
-# Error message was MODULE FAILURE: 
+# For some reason on a run after reboot I'm getting an error sometimes
+# Error message was MODULE FAILURE:
 # Exception calling \"Run\" with \"1\" argument(s): \"Exception calling \"Invoke\" with \"0\" argument(s): \"The running command \r\nstopped because the preference variable \"ErrorActionPreference\" or common parameter is set to Stop: The specified \r\nargument 'InstallDNS' was not recognized.
 # I added this sleep to see if it helps
 - name: Sleep 3 minutes after reboot from DNS configuration
@@ -188,47 +188,49 @@
 
 
 
-- name: Get A records for zone 
+- name: Get A records for zone
   win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
   changed_when: false
   register: arecords
 
-- debug: var=arecords
+- name: debug arecords
+  debug: var=arecords
 
-- debug: var=hostvars['gitlab']
+- name: debug hostvars 'gitlab'
+  debug: var=hostvars['gitlab']
 
 - name: Create A record for gitlab
   win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'gitlab' not in arecords.stdout"
 
-- name: Get PTR Records for zone 
+- name: Get PTR Records for zone
   win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
   register: ptr_records
 
-#- debug: var=ptr_records 
+#- debug: var=ptr_records
 #
 #- debug: msg="item = {{ item }}"
 #  with_items: "{{ groups.all }}"
 
 # Add-DnsServerResourceRecordPtr -Name "17" -ZoneName "1.168.192.in-addr.arpa" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "hostname.example.com"
-- name: Set PTR Record for each host 
+- name: Set PTR Record for each host
   win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
   when: "item not in ptr_records.stdout"
   with_items: "{{groups.all}}"
 
 - name: Add windows group
-  win_domain_group: 
+  win_domain_group:
     name: Ansible Users
     scope: global
     #path: OU=Users,DC=ansibleworkshop,DC=com
 
 - name: Add windows domain admin
-  win_domain_user: 
+  win_domain_user:
     name: "Admin"
     upn: "Admin@{{ dns_domain_name }}"
     state: present
     enabled: yes
-    account_locked: no 
+    account_locked: no
     groups:
       - Domain Admins
     password: "{{ domain_admin_password }}"
@@ -241,13 +243,13 @@
     #path: ou=Users,dc=ansibleworkshop,dc=com
 
 
-- name: Add windows AD users 
+- name: Add windows AD users
   win_domain_user:
-    name: "{{ user_prefix }}{{ item }}" 
+    name: "{{ user_prefix }}{{ item }}"
     upn: "{{ user_prefix}}{{ item }}@{{ dns_domain_name }}"
     state: present
     enabled: yes
-    account_locked: no 
+    account_locked: no
     groups:
       - Ansible Users
     password: "{{ users_password }}"
@@ -269,4 +271,3 @@
 - name: Set DNS search string
   win_shell: Set-DnsClientGlobalSetting -SuffixSearchList {{ dns_domain_name }}, ec2.internal
   when: "dns_domain_name not in suffixsearchlist.stdout"
-
