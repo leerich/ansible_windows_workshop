@@ -53,7 +53,7 @@
 - name: Ensure AD services are started - will fail if install not complete
   win_service:
     name: "{{ item }}"
-    #state: started
+    state: started
     start_mode: auto
   ignore_errors: yes
   with_items:
