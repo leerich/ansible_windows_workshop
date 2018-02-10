@@ -1,13 +1,13 @@
 ---
 - name: Remove PeerDNS=yes entry
   lineinfile:
-    path: /etc/sysconfig/network-scripts/ifcfg-ens192
+    path: /etc/sysconfig/network-scripts/ifcfg-eth0
     regexp: '^PEERDNS=yes'
     line: ''
 
 - name: set DNS resolution in ifcfg file
   blockinfile:
-    dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
     block: |
       DNS1={{ dns_server }}
       DNS2=8.8.8.8
