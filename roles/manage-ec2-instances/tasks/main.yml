@@ -8,46 +8,46 @@
 #  fail:
 #    msg: "Keypair <{{ keypair }}> does not exist"
 #  when: "keypair not in ec2_keypairs.stdout"
-  
-- name: Create Ansible Control Node security group   
-  ec2_group:  
-    name: "{{ ec2_name_prefix }}-towersg"  
-    description: "Ansible Tower SG"  
-    vpc_id: "{{ vpc_id }}"  
-    region: "{{ region }}"  
-    rules:    
-      - proto: tcp  
+
+- name: Create Ansible Control Node security group
+  ec2_group:
+    name: "{{ ec2_name_prefix }}-towersg"
+    description: "Ansible Tower SG"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    rules:
+      - proto: tcp
         from_port: 80
         to_port: 80
-        cidr_ip: 0.0.0.0/0  
+        cidr_ip: 0.0.0.0/0
       - proto: tcp
         from_port: 443
         to_port: 443
         cidr_ip: 0.0.0.0/0
-      - proto: tcp   
+      - proto: tcp
         from_port: 22
         to_port: 22
-        cidr_ip: 0.0.0.0/0  
+        cidr_ip: 0.0.0.0/0
 
-- name: Launch Tower Instance  
-  ec2:  
-    key_name: "{{ keypair }}"  
-    group: "{{ ec2_name_prefix }}-towersg"  
-    instance_type: "{{ tower_instance_type }}"  
+- name: Launch Tower Instance
+  ec2:
+    key_name: "{{ keypair }}"
+    group: "{{ ec2_name_prefix }}-towersg"
+    instance_type: "{{ tower_instance_type }}"
     exact_count: 1
-    count_tag: 
+    count_tag:
       Name: "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
-    instance_tags:  
+    instance_tags:
       Name: "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
-    image: "{{ rhel_ami }}"  
-    wait: true  
-    region: "{{ region }}"  
-    vpc_subnet_id: "{{ vpc_subnet_id }}"  
+    image: "{{ rhel_ami }}"
+    wait: true
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'linux_ec2_user_data.j2') }}"
-    assign_public_ip: yes  
+    assign_public_ip: yes
   with_sequence: count={{user_count}}
   register: tower_jobs
   async: 7200
@@ -68,23 +68,23 @@
 #- debug: msg="name- {{ item.tags.Name }} - pub ip- {{ item.public_ip }}"
 #  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"
 
-- name: Tower | Add new instance to host group  
-  add_host:  
-    hostname: "{{ item.tags.Name }}"  
-    ansible_ssh_host: "{{ item.public_ip }}"  
+- name: Tower | Add new instance to host group
+  add_host:
+    hostname: "{{ item.tags.Name }}"
+    ansible_ssh_host: "{{ item.public_ip }}"
     private_ip: "{{ item.private_ip }}"
     groups: tower
-  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"  
+  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"
 
-- name: Tower | Wait for SSH to come up  
-  wait_for:  
-    host: "{{ item.public_ip }}"  
-    port: 22  
-    delay: 1  
-    timeout: 320  
-    state: started  
-  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"  
- 
+- name: Tower | Wait for SSH to come up
+  wait_for:
+    host: "{{ item.public_ip }}"
+    port: 22
+    delay: 1
+    timeout: 320
+    state: started
+  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"
+
 
 #### Deploy GitLab Server
 - name: GitLab | Create Gitlab Node security group
@@ -142,14 +142,14 @@
     state: started
   with_items: "{{ ec2gitlab.tagged_instances }}"
 
-- name: GitLab | Add new instance to host group  
-  add_host:  
+- name: GitLab | Add new instance to host group
+  add_host:
     hostname: "gitlab"
-    #hostname: "{{ item.tags.Name }}"  
-    ansible_ssh_host: "{{ item.public_ip }}"  
+    #hostname: "{{ item.tags.Name }}"
+    ansible_ssh_host: "{{ item.public_ip }}"
     private_ip: "{{ item.private_ip }}"
     groups: gitlab
-  with_items: "{{ ec2gitlab.tagged_instances }}"  
+  with_items: "{{ ec2gitlab.tagged_instances }}"
 
 
 #### Deploy Domain Controller
@@ -162,7 +162,7 @@
 
 - debug: var=vpc_subnet_facts
 
-- set_fact: 
+- set_fact:
      vpc_subnet_cidr: "{{ vpc_subnet_facts.subnets[0].cidr_block }}"
 
 # VPC cidr used to restrict AD access to others in your subnet
@@ -257,7 +257,7 @@
         from_port: 9389
         to_port: 9389
         cidr_ip: "{{ vpc_subnet_cidr }}"
-      ## Replication, Auth, Trusts 
+      ## Replication, Auth, Trusts
       - proto: tcp
         from_port: 445
         to_port: 445
@@ -394,7 +394,7 @@
 - name: Windows | Launch instance 1
   ec2:
     key_name: "{{ keypair }}"
-    group: 
+    group:
       - "{{ ec2_name_prefix }}-windowssg"
       - "{{ ec2_name_prefix }}-websg"
     instance_type: "{{ windows_instance_type }}"
@@ -448,7 +448,7 @@
   register: windows_instances
   until: windows_instances.finished
   retries: 300
-  with_items: 
+  with_items:
     - "{{ windows1_jobs.results }}"
 #    - "{{ windows2_jobs.results }}"
 
@@ -570,14 +570,13 @@
   with_items: "{{ ec2workstation_password.results }}"
   when: ec2workstation_password is defined
 
-#- name: Generate instructor inventory
-#  template:
-#    src: instructor_inventory.j2
-#    dest: ./instructor_inventory.txt
+- name: Generate instructor inventory
+  template:
+    src: instructor_inventory.j2
+    dest: ./instructor_inventory.txt
 
-#- name: Generate student inventories
-#  template:
-#    src: instances.txt.j2
-#    dest: ./{{user_prefix}}{{ item }}-instances.txt
-#  with_sequence: count="{{ user_count }}"
-
+- name: Generate student inventories
+  template:
+    src: instances.txt.j2
+    dest: ./{{user_prefix}}{{ item }}-instances.txt
+  with_sequence: count="{{ user_count }}"
