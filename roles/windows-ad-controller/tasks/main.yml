@@ -58,6 +58,10 @@
   with_items:
     - adws
     - dns
+    - afd
+    - rpcss
+    - ntds
+    - lanmanworkstation
     - kdc
     - netlogon
  
