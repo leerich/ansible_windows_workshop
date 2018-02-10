@@ -1,7 +1,7 @@
 [all:vars]
 {% if ssh_port is defined %}
 ansible_port={{ ssh_port }}
-ansible_password="{{ ansible_password }}"
+#ansible_password="{{ ansible_password }}"
 {% endif %}
 
 [windows:vars]
