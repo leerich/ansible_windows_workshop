@@ -200,7 +200,7 @@
   debug: var=hostvars['gitlab']
 
 - name: Create A record for gitlab
-  win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['ansible_ssh_host'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'gitlab' not in arecords.stdout"
 
 - name: Get PTR Records for zone
