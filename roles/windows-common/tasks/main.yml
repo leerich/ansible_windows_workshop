@@ -2,7 +2,7 @@
 - name: Add domain controller private IP as DNS server
   win_dns_client:
     adapter_names: "*"
-    ipv4_addresses: "{{ hostvars['win-workshop-windc']['ec2_private_ip_address'] }}"
+    ipv4_addresses: "{{ hostvars['windc']['ec2_private_ip_address'] }}"
 
 - name: Join Domain
   win_domain_membership:
