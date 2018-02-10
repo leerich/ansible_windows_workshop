@@ -2,7 +2,7 @@
 - name: Add domain controller private IP as DNS server
   win_dns_client:
     adapter_names: "*"
-    ipv4_addresses: "{{ dns_servers }}"
+    ipv4_addresses: "{{ hostvars[windc]['private_ip_address'] }}"
 
 - name: Join Domain
   win_domain_membership:
@@ -20,13 +20,12 @@
   when: windomain.reboot_required
 
 - name: Get current DNS search string
-  win_shell: Get-DnsClientGlobalSetting | Select SuffixSearchList 
+  win_shell: Get-DnsClientGlobalSetting | Select SuffixSearchList
   changed_when: false
   register: suffixsearchlist
 
 - debug: var=suffixsearchlist
 
-- name: Set DNS search string 
+- name: Set DNS search string
   win_shell: Set-DnsClientGlobalSetting -SuffixSearchList {{ dns_domain_name }}, ec2.internal
   when: "dns_domain_name not in suffixsearchlist.stdout"
-
