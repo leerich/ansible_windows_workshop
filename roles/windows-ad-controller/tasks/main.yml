@@ -219,7 +219,7 @@
   #win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
   when: "item not in ptr_records.stdout"
   with_items: "{{groups.all}}"
-  ignore_errors: yes
+  #ignore_errors: yes
 
 - name: Add windows group
   win_domain_group:
