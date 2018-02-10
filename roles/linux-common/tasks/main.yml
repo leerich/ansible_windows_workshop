@@ -14,7 +14,7 @@
       DOMAIN="{{dns_domain_name}} ec2.internal"
       PEERDNS=no
   register: nm_resolv
-  ignore_errors: true
+  ignore_errors: yes
 
 - name: restart NetworkManager service
   service:
