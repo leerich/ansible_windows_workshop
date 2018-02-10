@@ -207,7 +207,8 @@
   win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
   register: ptr_records
 
-#- debug: var=ptr_records
+- name: debug ptr_records
+  debug: var=ptr_records
 #
 #- debug: msg="item = {{ item }}"
 #  with_items: "{{ groups.all }}"
