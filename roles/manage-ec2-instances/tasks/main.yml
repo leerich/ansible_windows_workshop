@@ -144,7 +144,8 @@
 
 - name: GitLab | Add new instance to host group  
   add_host:  
-    hostname: "{{ item.tags.Name }}"  
+    hostname: "gitlab"
+    #hostname: "{{ item.tags.Name }}"  
     ansible_ssh_host: "{{ item.public_ip }}"  
     private_ip: "{{ item.private_ip }}"
     groups: gitlab
