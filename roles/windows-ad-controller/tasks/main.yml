@@ -55,6 +55,7 @@
     name: "{{ item }}"
     #state: started
     start_mode: auto
+  ignore_errors: yes
   with_items:
     - adws
     - dns
