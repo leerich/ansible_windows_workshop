@@ -47,7 +47,7 @@ ptr_zone_cidr: "10.0.1.0/24"
 ldap_search_base: "DC=ansibleworkshop,DC=com"
 ldap_access_filter: "(&(objectClass=user)(memberOf=CN=Ansible Users,CN=Users,DC=ansibleworkshop,DC=com))"
 
-# Gitlab variables 
+# Gitlab variables
 gitlab_external_url: "https://gitlab.{{ dns_domain_name }}/"
 gitlab_git_data_dir: "/var/opt/gitlab/git-data"
 gitlab_backup_path: "/var/opt/gitlab/backups"
@@ -86,7 +86,7 @@ gitlab_smtp_enable: "false"
 # Instance Sizes
 tower_instance_type: "t2.medium"    # Medium = 2 vCPU / 4GB
 gitlab_instance_type: "t2.medium"   # Might be able to use small...
-windc_instance_type: "t2.medium"    # t2.micro fails
+windc_instance_type: "t2.xlarge"    # t2.micro fails
 windows_workstation_instance_type: "t2.medium"   # t2.small was slowwwwww...
 windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
 
@@ -94,5 +94,3 @@ windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
 rhel_ami: ami-c998b6b2              # Rhel 7.4
 #windows_ami: ami-0a792a70           # Windows 2016 Base
 windows_ami: ami-603b1c1a
-
-
