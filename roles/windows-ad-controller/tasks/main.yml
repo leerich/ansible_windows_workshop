@@ -210,8 +210,8 @@
 - name: debug ptr_records
   debug: var=ptr_records
 #
-#- debug: msg="item = {{ item }}"
-#  with_items: "{{ groups.all }}"
+- debug: msg="item = {{ item }}"
+  with_items: "{{ groups.all }}"
 
 # Add-DnsServerResourceRecordPtr -Name "17" -ZoneName "1.168.192.in-addr.arpa" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "hostname.example.com"
 - name: Set PTR Record for each host
