@@ -1,4 +1,14 @@
 ---
+- name: Add epel repo - transition to engine...
+  yum_repository:
+    name: epel
+    description: epel for Enterprise Linux 7
+    #baseurl: http://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
+    #metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
+    baseurl: http://download.fedoraproject.org/pub/epel/7/$basearch
+    enabled: yes
+    gpgcheck: no
+    
 - name: GitLab Post | Install pip
   yum:
     name: python2-pip
