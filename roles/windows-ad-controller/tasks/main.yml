@@ -213,6 +213,10 @@
 - debug: msg="item = {{ item }}"
   with_items: "{{ groups.all }}"
 
+- name: Debug ansible_host variables
+  debug: "{{ hostvars[item]['ansible_host'] }}"
+  with_items: "{{ groups.all }}"
+
 # Add-DnsServerResourceRecordPtr -Name "17" -ZoneName "1.168.192.in-addr.arpa" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "hostname.example.com"
 - name: Set PTR Record for each host
   win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
