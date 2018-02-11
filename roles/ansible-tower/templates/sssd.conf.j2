@@ -14,13 +14,13 @@ krb5_server = windc.{{ dns_domain_name }}
 ldap_force_upper_case_realm = true
 ldap_id_mapping = True
 
-ldap_sasl_authid = {{ ansible_hostname | upper }}$@{{ dns_domain_name | upper }}
+ldap_sasl_authid = {{ inventory_hostname | upper }}$@{{ dns_domain_name | upper }}
 ldap_sasl_mech = GSSAPI
 
 ldap_schema = ad
 ldap_search_base = {{ ldap_search_base }}
 ad_server = windc.{{ dns_domain_name }}
-#ad_backup_server = 
+#ad_backup_server =
 
 access_provider = ldap
 ldap_access_order = filter, expire
