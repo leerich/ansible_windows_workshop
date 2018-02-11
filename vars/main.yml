@@ -5,15 +5,19 @@ dns_domain_name: "ansibleworkshop.com"
 domain_admin_password: "MyP@ssw0rd21"
 
 # Where to provision instances
-instance_loc: vmware
+instance_loc: ec2
 
 # Overrides for manage-ec2-instances role
-keypair: "jconner-keypair"
-vpc_id: "vpc-########"
-vpc_subnet_id: "subnet-########"
+#keypair: "jconner-keypair"
+#vpc_id: "vpc-########"
+#vpc_subnet_id: "subnet-########"
 region: "us-east-1"
-ec2_key_file: "~/.ssh/mykeypair.pem"
+#ec2_key_file: "~/.ssh/mykeypair.pem"
 ec2_name_prefix: "win-workshop"
+ec2_key_file: "/var/lib/awx/mykeypair.pem"
+keypair: "lrich-key"
+vpc_id: "vpc-37d1504f"
+vpc_subnet_id: "subnet-7e169435"
 
 # VCenter Information
 vCenterServer: 10.0.1.2
@@ -37,11 +41,13 @@ user_count: 1
 user_prefix: student
 
 # Root user (ec2-user for AWS)
-root_user: root
+root_user: ec2-user
 
 # Needed for reverse lookup DNS setup
-ptr_zone_name: "1.0.10.in-addr.arpa"
-ptr_zone_cidr: "10.0.1.0/24"
+#ptr_zone_name: "1.0.10.in-addr.arpa"
+#ptr_zone_cidr: "10.0.1.0/24"
+ptr_zone_name: "48.172.in-addr.arpa"
+ptr_zone_cidr: "172.48.0.0/16"
 
 # Tower LDAP Integration
 ldap_search_base: "DC=ansibleworkshop,DC=com"
@@ -93,4 +99,5 @@ windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
 # Ideally update to auto-pull the latest
 rhel_ami: ami-c998b6b2              # Rhel 7.4
 #windows_ami: ami-0a792a70           # Windows 2016 Base
-windows_ami: ami-603b1c1a
+#windows_ami: ami-603b1c1a
+windows_ami: ami-013e197b
