@@ -2,7 +2,7 @@
 - name: Enable extras repos
   shell: yum-config-manager --enable rhui-REGION-rhel-server-extras
 
-- name: Add Ansible repo - transition to engine... 
+- name: Add Ansible repo - transition to engine...
   yum_repository:
     name: ansible
     description: Ansible for Enterprise Linux 7
@@ -20,7 +20,7 @@
     - sshpass
     - ansible
     - bind-utils
-    - python-pip
+    - python34-pip
 
 - name: Install devel branch
   pip:
@@ -61,9 +61,9 @@
     - pywinrm>=0.2.2
     - pywinrm[kerberos]
     - pywinrm[credssp]
- 
+
 # Set DNS name via network manager
-- name: set DNS resolution in ifcfg file 
+- name: set DNS resolution in ifcfg file
   blockinfile:
     dest: /etc/sysconfig/network-scripts/ifcfg-ens192
     block: |
@@ -74,12 +74,12 @@
   register: nm_resolv
 
 - name: restart NetworkManager service
-  service: 
-    name: NetworkManager 
+  service:
+    name: NetworkManager
     state: restarted
   when: nm_resolv.changed
 
-- name: Install dependencies for domain join 
+- name: Install dependencies for domain join
   package:
     name: "{{ item }}"
     state: present
@@ -89,10 +89,10 @@
     - openldap-clients
     - realmd
     - sssd
-    - samba-common-tools 
+    - samba-common-tools
     - authconfig
 
-### Add something to check if it is already in a domain? 
+### Add something to check if it is already in a domain?
 
 - name: Install pexpect using pip
   pip:
@@ -104,8 +104,8 @@
   changed_when: false
   ignore_errors: true
 
-- name: Join the Domain 
-  expect: 
+- name: Join the Domain
+  expect:
     command: "realm join -U Admin@{{ dns_domain_name }} {{ dns_domain_name | upper }}"
     responses:
       Password for *: "{{ domain_admin_password }}"
@@ -139,35 +139,35 @@
   when: authconfig_run.rc != 0
 
 - name: Configure SSSD to use AD for authentication
-  template: 
-    src: sssd.conf.j2 
+  template:
+    src: sssd.conf.j2
     dest: /etc/sssd/sssd.conf
-    owner: root 
+    owner: root
     group: root
     mode: 0600
   notify: restart sssd
 
 - name: Ensure SSSD is started and enabled on boot
-  service: 
-    name: sssd 
-    state: started 
+  service:
+    name: sssd
+    state: started
     enabled: yes
 
 - name: Ensure oddjobd for mkhomedir is started and enabled on boot
-  service: 
-    name: oddjobd 
-    state: started 
+  service:
+    name: oddjobd
+    state: started
     enabled: yes
 
 - name: Copy student inventory to host
-  copy: 
+  copy:
     src: ./{{ item }}
     dest: /etc/ansible/hosts
     owner: root
     group: root
-    mode: 0644 
+    mode: 0644
     backup: yes
-  with_items: 
+  with_items:
     - "{{ user_prefix }}{{ inventory_hostname | regex_replace('\\D') }}-instances.txt"
 
 - name: Allow insecure git repos for self signed certificates
@@ -184,4 +184,3 @@
 
 - name: Update git to credential timeout after 1 day
   command: git config --global credential.helper 'cache --timeout=86400'
-
