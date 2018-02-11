@@ -65,7 +65,7 @@
 - name: Configure GitLab Host
   hosts: gitlab
   become: True
-  remote_user: "{{ root_user }}"
+  #remote_user: "{{ root_user }}"
   gather_facts: true
   vars_files:
     - vars/main.yml
@@ -79,7 +79,7 @@
 - name: Gitlab Post Config
   hosts: gitlab
   become: True
-  remote_user: "{{ root_user }}"
+  #remote_user: "{{ root_user }}"
   gather_facts: true
   vars_files:
     - vars/main.yml
