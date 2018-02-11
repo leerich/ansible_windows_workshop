@@ -165,7 +165,8 @@
 - debug: var=vpc_subnet_facts
 
 - set_fact:
-     vpc_subnet_cidr: "{{ vpc_subnet_facts.subnets[0].cidr_block }}"
+     #vpc_subnet_cidr: "{{ vpc_subnet_facts.subnets[0].cidr_block }}"
+     vpc_subnet_cidr: "0.0.0.0/0"
 
 # VPC cidr used to restrict AD access to others in your subnet
 - name: DomainController | Create MS AD Domain Controller security group
