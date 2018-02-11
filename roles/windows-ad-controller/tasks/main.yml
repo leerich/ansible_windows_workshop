@@ -214,7 +214,7 @@
   with_items: "{{ groups.all }}"
 
 - name: Debug ansible_host variables
-  debug: "{{ hostvars[item] }}"
+  debug: var=hostvars[item]
   with_items: "{{ groups.all }}"
 
 # Add-DnsServerResourceRecordPtr -Name "17" -ZoneName "1.168.192.in-addr.arpa" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "hostname.example.com"
