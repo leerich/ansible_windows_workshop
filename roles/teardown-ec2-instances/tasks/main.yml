@@ -22,9 +22,10 @@
     - "{{ ec2_tower_instances.results }}"
   when: item.instances.0 is defined and item.instances.0.instance_id is defined
 
-- name: Remove Tower security group   
-  ec2_group:  
+- name: Remove Tower security group
+  ec2_group:
     name: "{{ ec2_name_prefix }}-towersg"
+    region: "{{ region }}"
     state: absent
   register: result
   until: result|success
@@ -52,8 +53,8 @@
     - "{{ ec2_gitlab_instances }}"
   when: item.instances.0 is defined
 
-- name: Remove Gitlab security group   
-  ec2_group:  
+- name: Remove Gitlab security group
+  ec2_group:
     name: "{{ ec2_name_prefix }}-gitlabsg"
     state: absent
   register: result
@@ -82,8 +83,8 @@
     - "{{ ec2_dc_instances }}"
   when: item.instances.0 is defined
 
-- name: Remove DC security group   
-  ec2_group:  
+- name: Remove DC security group
+  ec2_group:
     name: "{{ ec2_name_prefix }}-windcsg"
     state: absent
   register: result
@@ -112,8 +113,8 @@
     - "{{ ec2_windows_instances.results }}"
   when: item.instances.0 is defined and item.instances.0.instance_id is defined
 
-- name: Remove Web security group   
-  ec2_group:  
+- name: Remove Web security group
+  ec2_group:
     name: "{{ ec2_name_prefix }}-websg"
     state: absent
   register: result
@@ -143,15 +144,11 @@
     - "{{ ec2_workstation_instances.results }}"
   when: item.instances.0 is defined and item.instances.0.instance_id is defined
 
-- name: Remove Windows security group   
-  ec2_group:  
+- name: Remove Windows security group
+  ec2_group:
     name: "{{ ec2_name_prefix }}-windowssg"
     state: absent
   register: result
   until: result|success
   retries: 20
   delay: 10
-
-
-
-
