@@ -13,7 +13,7 @@
 - name: Add epel repo - transition to engine...
   yum_repository:
     name: epel
-    description: Ansible for Enterprise Linux 7
+    description: epel for Enterprise Linux 7
     #baseurl: http://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
     #metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
     baseurl: http://download.fedoraproject.org/pub/epel/7/$basearch
@@ -30,7 +30,7 @@
     - sshpass
     - ansible
     - bind-utils
-    - python34-pip
+    - python2-pip
 
 - name: Install devel branch
   pip:
