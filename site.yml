@@ -16,7 +16,7 @@
 # Configure Active Directory
 - name: Configure Active Directory Domain Controller
   hosts: windows_domain_controllers
-  gather_facts: no
+  gather_facts: true
   vars_files:
     - vars/main.yml
   tags:
@@ -29,7 +29,7 @@
   hosts: windows_workstations
   vars_files:
     - vars/main.yml
-  gather_facts: false
+  gather_facts: true
   tags:
     - windows-workstation
   roles:
@@ -41,7 +41,7 @@
   hosts: tower
   become: True
   #remote_user: "{{ root_user }}"
-  gather_facts: false
+  gather_facts: True
   vars_files:
     - vars/main.yml
   tags:
@@ -53,7 +53,7 @@
 # Configure Windows Hosts
 - name: Configure Windows Servers
   hosts: windows
-  gather_facts: false
+  gather_facts: true
   vars_files:
     - vars/main.yml
   tags:
@@ -66,7 +66,7 @@
   hosts: gitlab
   become: True
   remote_user: "{{ root_user }}"
-  gather_facts: false
+  gather_facts: true
   vars_files:
     - vars/main.yml
   tags:
@@ -80,7 +80,7 @@
   hosts: gitlab
   become: True
   remote_user: "{{ root_user }}"
-  gather_facts: false
+  gather_facts: true
   vars_files:
     - vars/main.yml
   tags:
