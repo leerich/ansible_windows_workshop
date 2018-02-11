@@ -53,7 +53,7 @@
 # Configure Windows Hosts
 - name: Configure Windows Servers
   hosts: windows
-  gather_facts: True
+  gather_facts: false
   vars_files:
     - vars/main.yml
   tags:
@@ -66,7 +66,7 @@
   hosts: gitlab
   become: True
   remote_user: "{{ root_user }}"
-  gather_facts: True
+  gather_facts: false
   vars_files:
     - vars/main.yml
   tags:
@@ -80,7 +80,7 @@
   hosts: gitlab
   become: True
   remote_user: "{{ root_user }}"
-  gather_facts: True
+  gather_facts: false
   vars_files:
     - vars/main.yml
   tags:
