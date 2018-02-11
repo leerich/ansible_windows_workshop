@@ -8,7 +8,7 @@
     baseurl: http://download.fedoraproject.org/pub/epel/7/$basearch
     enabled: yes
     gpgcheck: no
-    
+
 - name: GitLab Post | Install pip
   yum:
     name: python2-pip
@@ -75,6 +75,7 @@
     confirm: False
     state: present
   with_sequence: count="{{ user_count }}"
+  ignore_errors: yes
 
 - name: GitLab Post | Create Projects in GitLab
   gitlab_project:
