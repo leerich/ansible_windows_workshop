@@ -9,7 +9,8 @@
   blockinfile:
     dest: /etc/sysconfig/network-scripts/ifcfg-eth0
     block: |
-      DNS1={{ dns_server }}
+      #DNS1={{ dns_server }}
+      DNS1="{{ hostvars['windc']['private_ip'] }}"
       DNS2=8.8.8.8
       DOMAIN="{{dns_domain_name}} ec2.internal"
       PEERDNS=no
