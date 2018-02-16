@@ -403,10 +403,10 @@
     instance_type: "{{ windows_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + '-win1'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + '-win1'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ windows_ami }}"
@@ -510,10 +510,10 @@
     instance_type: "{{ windows_workstation_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + '-workstation'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
+      Name: "{{ ec2_name_prefix + '-s' + item + '-workstation'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ windows_ami }}"

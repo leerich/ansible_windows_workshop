@@ -1,5 +1,18 @@
 # Playbook for Ansible Windows workshop setup.
 ---
+- name: Generate users list
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+
+  tasks:
+    - name: generate users list
+      set_fact:
+        users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
+      with_sequence: start="1" end="{{ user_count }}"
+
+
 - name: Provision Instances
   hosts: localhost
   connection: local

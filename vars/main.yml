@@ -54,6 +54,7 @@ ldap_search_base: "DC=ansibleworkshop,DC=com"
 ldap_access_filter: "(&(objectClass=user)(memberOf=CN=Ansible Users,CN=Users,DC=ansibleworkshop,DC=com))"
 
 # Gitlab variables
+gitlab_version: “10.0.6-ce.0.el7”
 gitlab_external_url: "https://gitlab.{{ dns_domain_name }}/"
 gitlab_git_data_dir: "/var/opt/gitlab/git-data"
 gitlab_backup_path: "/var/opt/gitlab/backups"
